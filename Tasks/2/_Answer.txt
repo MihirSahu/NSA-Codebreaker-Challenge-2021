@@ -1,0 +1,9 @@
+0X33DA97
+
+
+Steps
+------
+1. Use the IP address that all the DIB IP address communicated with (10.61.135.118) and find that address on the proxy.log file
+2. After finding the address on the proxy.log file, find the IP address that it's associated with on the same line of the file (172.26.161.73)
+3. Now take the address you found and search for it in the logins.json file until you find it in an ipv4 format (like this: "RemoteHost": "- (172.26.161.73)")
+4. The logon ID should be on that line

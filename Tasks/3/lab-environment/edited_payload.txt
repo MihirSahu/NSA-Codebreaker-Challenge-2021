@@ -1,0 +1,12 @@
+$bytes = $(get-content exported_data -AsByteStream)
+
+$prev = [byte] 73
+
+$dec = $(for ($i = 0; $i -lt $bytes.length; $i++) {
+    $prev = $bytes[$i] -bxor $prev
+    $prev
+})
+
+#iex([System.Text.Encoding]::UTF8.GetString($dec))
+
+[System.Text.Encoding]::UTF8.GetString($dec)

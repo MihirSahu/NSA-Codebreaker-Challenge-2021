@@ -1,0 +1,13 @@
+IPs associated with DIB that have had communication with LP
+------------------------------------------------------------
+10.6.41.78
+10.31.55.169
+10.41.4.193
+198.18.71.76
+
+External IP that communicated with the above addresses
+--------------------------------------------------------
+10.61.135.118
+
+
+Use either the script I made or wireshark to check which IP addresses in the wireshark capture file are a part of the given DIB subnets

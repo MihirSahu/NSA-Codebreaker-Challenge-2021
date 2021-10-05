@@ -1,0 +1,16 @@
+Malicious emailer
+------------------
+fairley.angel@external.invalid
+Malicious attachment was a text file pretending to be a .jpg (sam1.jpg) in email #4
+
+Message id <161582853000.22130.13517989174380870563@oops.net>
+
+Domain name the malicious payload was trying to connect to:
+http://nlyte.invalid:8080
+
+
+Help I got from Quantatic on discord:
+This is a classic multi-stage malware payload. The initial payload infects the computer, then calls out to a malicious domain which then returns the main malicious payload. This, among other things, helps avoid detection -- the actual script being run isn't too suspicious -- the malicious code is only ever stored in memory, never on disk.
+The data itself is encrypted/obfuscated in order to avoid detection from something like a firewall. Many systems (especially enterprise) monitor incoming traffic for potential malware. By encrypting the payload (even if it's only with a very simple xor-based scheme), the malware avoids detection by never being transferred over the internet in plaintext format.(edited)
+The data itself is encrypted/obfuscated in order to avoid detection from something like a firewall. Many systems (especially enterprise) monitor incoming traffic for potential malware. By encrypting the payload (even if it's only with a very simple xor-based scheme), the malware avoids detection by never being transferred over the internet in plaintext format.(edited)
+Another useful feature of the multi-stage format is that if the malware campaign wants to start running different malware on compromised computers, it's as simple as changing what's hosted at the URL in question.
