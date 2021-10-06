@@ -1,0 +1,17 @@
+1. Examine the payoad, understand what it's doing.
+However knowing what it does in every command is not necessary to solve this.
+
+2. .ppk files without any encryption (look at the 'Encryption:' section in the ppk file)
+    dkr_prd52.ppk
+    dkr_tst32.ppk
+    dkr_tst46.ppk
+    dkr_tst80.ppk
+    dkr_tst81.ppk
+
+Assuming that 'prd' are the machines in production and 'tst' are machine that are just being tested, there's only one machine that didn't have the private key encrypted: dkr_prd52.ppk
+
+3. Now simple open the NTUSER.DAT file in the HKEY_USERS registry on windows by using the "Load Hive" option on the registry editor, name it whatever you want (I named it Codebreaker) and go to Computer\HKEY_USERS\Codebreaker\Software\SimonTatham\PuTTY\Sessions\dkr_prd52
+
+4. Now go to the 'HostName' key and you'll see the answer in the format <username>@<machine name>, like you use in ssh
+
+5. So the answer is builder05@dkr_prd52
