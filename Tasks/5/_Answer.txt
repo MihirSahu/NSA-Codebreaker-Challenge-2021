@@ -1,0 +1,26 @@
+1. Extract the archive with "tar -xvf" (there's no compression algorithm because the file isn't compressed; it's just been added into an archive)
+
+2. Look at all the files, in the image json file "9669...".json you'll find a lot of information about the image, and you will find that the email of the PANIC employee maintainer is roper.shawn@panic.invalid
+
+3. Now extract the layer.tar files in the most recent layer (you know which layer is the most recent because it says so in the 'repositories' file) and you'll find the file 'build_test.sh'
+*Layers are just the changes that are made to the image. For example, when a dockerfile is run, each line/command creates a new layer in the image
+
+4. Open build_test.sh and you'll find that the repository that's being cloned is https://git-svr-30.prod.panic.invalid/hydraSquirrel/hydraSquirrel.git
+
+#5. Now go back to the original image.tar and load it into dock by using "docker image load -i image.tar"
+#*At this point it'll be useful to be familiar with docker
+
+5. Now you might be tempted to load the image into docker and run it - like I did - but the answer to the third part is already right in front of you
+   Take a closer look at the build_test.sh file and you'll see that after cloning the repository, moving into the directory, and running autogen.sh, something seems to be getting compiled with make
+   We don't know what went on with autogen.sh, but why would the attacker be wasting time compiling when they could've just placed the binary into the repository in the first place?
+   Let's switch viewpoints for a second
+   So since we need to find the path to the file, we take a look at the PATH environment variable that was set in the image from the json file "9669...".json
+      This shows us that the path is set to PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin, so this is where the system will check and use programs when they're run
+      It makes sense that the program that the attacker wanted on the system would be in one of these directories
+   Now back to the previous point
+   The best thing you can do as an attacker is hide things in plain sight, so what if the attacker overwrote a program that already exists?
+   What if they created flags that look like the original program but actually had some other malicous functionality?
+   So I took a chance and guessed that make was the program that was overwritten, and that 'make -j 4 install', 'make check', or both of them were executing malicious code
+   I went to the root directory and used the find command - something like 'find -name make* -type f' to find a file that starts with 'make', and found that the make binary was in the /usr/bin/make directory, which was in the PATH environment variable
+
+And that's how I solved task 5 :)
