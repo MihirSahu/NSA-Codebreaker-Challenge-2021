@@ -1,0 +1,4 @@
+1. Go to the original image.tar and load it into dock by using "docker image load -i image.tar"
+2. Run the image with "docker run -d --name <what you want the container name> image.tar /bin/bash tail -f /dev/null". The /bin/bash tail -f /dev/null is not necessary for running it but is needed for analysis because otherwise the container exits within seconds; by adding it the container has a continous stream of instructions, and doesn't exit
+3. Export the container's file system using 'docker container export -o <output file name> <container name>'
+4. Go to /usr/bin and copy the make file to another directory for analysis
