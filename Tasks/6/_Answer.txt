@@ -8,3 +8,10 @@
 5. Enter the container by using "docker exec -it <container name> /bin/bash"
 6. We know from the config files that this container uses alpine linux, which uses the apk package manager, so we can install the tools we need inside the container itself
    1. GDB (Gnu Project Debugger) - we need this to see what's going on when the binary runs
+   2. GEF - an extension for gdb. Look at docs to see how to install
+
+7. Install ghidra and analyze the binary, become familiar with the code
+
+
+IP of the LP that the program sends data to: 198.51.100.141
+Version number reported by the malware: 1.1.4.3-OTM
