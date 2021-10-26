@@ -8,10 +8,83 @@
 5. Enter the container by using "docker exec -it <container name> /bin/bash"
 6. We know from the config files that this container uses alpine linux, which uses the apk package manager, so we can install the tools we need inside the container itself
    1. GDB (Gnu Project Debugger) - we need this to see what's going on when the binary runs
+         Use "apk add gdb" to install
    2. GEF - an extension for gdb. Look at docs to see how to install
 
 7. Install ghidra and analyze the binary, become familiar with the code
 
+8. Run gdb inside the docker container
+      1. sudo gdb /usr/bin/make (run gdb on the make binary)
+      2. break main (create a breakpoint on the main function)
+      3. run (run the program. It will stop on the main function)
+9. From analyzing the code on ghidra we know that the function dailwonjwujly is called multiple times as a way of deobfuscating code
+      A few of these instances
+         ip_00 = dailwonjwujly(0x13);
+               We can assume that running dailwonjwujly(0x13) will give us the ip address
+         version_00 = dailwonjwujly(0x11);
+               We can assume that running dailwonjwujly(0x11) will give us the version
+      So in gdb we do
+            call dailwonjwujly(0x13)
+            call dailwonjwujly(0x11)
+      And we get
+            IP of the LP that the program sends data to: 198.51.100.141
+            Version number reported by the malware: 1.1.4.3-OTM
 
-IP of the LP that the program sends data to: 198.51.100.141
-Version number reported by the malware: 1.1.4.3-OTM
+10. I was stuck on the public key for a long time :(
+      If we look at the program on ghidra
+            main -> gitGrabber -> tixddwmsuarix -> omhvwaswwvpxk
+      We see that the omhvwaswwvpxk function calls dailwonjwujly(0x12)
+      If we call that we get "\350zJ?\032s\251\347\373W9\233\217\225z&\375\357R\316\027\363Eg\v\340\343\371\225]\321*"
+      The question asks us for the hex encoded value, so we convert that to hex
+      I had to ask someone on the discord for help, and they directed me to https://wandbox.org/permlink/gCnda6hQIhKIIByo, where I found this code
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <string>
+
+// convert a normal string to equivalent string of hex numbers
+void stream2hex(const std::string str, std::string& hexstr)
+{
+    hexstr = std::string(str.size() << 1, '\0');
+    char c;
+
+    for (size_t i = 0, j = 0; i < str.size(); i++)
+    {
+        c = (str[i] & 0xF0) >> 4;
+        hexstr[j++] = c > 9 ? (c - 9) | 0x40 : c | 0x30;
+        c = str[i] & 0xF;
+        hexstr[j++] = c > 9 ? (c - 9) | 0x40 : c | 0x30;
+    }
+}
+
+// convert string of hex numbers to equivalent string
+void hex2stream(const std::string hexstr, std::string& str)
+{
+    str = std::string((hexstr.size() + 1) >> 1, '\0');
+    unsigned char c;
+
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        c = (unsigned char)hexstr[i << 1];
+        str[i] = (c > '9' ? c + 9 : c) << 4;
+        c = (unsigned char)hexstr[(i << 1) | 1];
+        str[i] |= (c > '9' ? (c + 9) & 0xF : c & 0xF);
+    }
+}
+
+#include <iostream>
+int main()
+{
+    std::string s = "\350zJ?\032s\251\347\373W9\233\217\225z&\375\357R\316\027\363Eg\v\340\343\371\225]\321*";
+    std::cout << "original string size: " << s.size() << '\n';
+    stream2hex(s, s);
+    std::cout << "hex format: " << s << '\n';
+    hex2stream(s, s);
+    std::cout << "print form of the original one: \'" << s << "\'\n";
+    return 0;
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      If we replace the first line of the main function with our string (which I already did) and run the program with "g++ prog.cc -I/opt/wandbox/boost-1.73.0/gcc-head/include -std=gnu++2b" we get out answer in hex format
+
+The hex encoded public key is E87A4A3F1A73A9E7FB57399B8F957A26FDEF52CE17F345670BE0E3F9955DD12A
