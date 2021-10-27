@@ -1,5 +1,6 @@
 1. Go to the original image.tar and load it into dock by using "docker image load -i image.tar"
-2. Run the image with "docker run -d --name <what you want the container name> image.tar /bin/bash tail -f /dev/null". The /bin/bash tail -f /dev/null is not necessary for running it but is needed for analysis because otherwise the container exits within seconds; by adding it the container has a continous stream of instructions, and doesn't exit
+2. Run the image with "docker run -d --name <what you want the container name> <image name> /bin/bash tail -f /dev/null". The /bin/bash tail -f /dev/null is not necessary for running it but is needed for analysis because otherwise the container exits within seconds; by adding it the container has a continous stream of instructions, and doesn't exit
+If it still keeps exiting, try using just "tail -f /dev/null" instead of "/bin/bash tail -f /dev/null"
 
 #Do 3 and 4 if you want to export the file from the container
 #3. Export the container's file system using 'docker container export -o <output file name> <container name>'
