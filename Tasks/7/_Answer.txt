@@ -1,0 +1,9 @@
+Notes
+------
+From the previous task we know that most of the interesting stuff happens in these functions:
+     main -> gitGrabber -> tixddwmsuarix
+We found the answers to Task 6 in gitGrabber, tixddwmsuarix, and omhvwaswwvpxk
+     We know that omhvwaswwvpxk deals with cryptographic portions of the program, as it has variables such as client_secret, client_public, and public_key among other variables
+The instructions to Task 7 state, "Our analysts believe the protocol includes an initial crypt negotiation followed by a series of client-generated requests, which the LP responds to. Provide the plaintext a client would send to initialize a new session with the provided UUID."
+     So tixddwmsuarix and omhvwaswwvpxk must be important to finding the solution
+Because we're given the UUID, we know that tixddwmsuarix is valuable because it has a variable called my_uuid
